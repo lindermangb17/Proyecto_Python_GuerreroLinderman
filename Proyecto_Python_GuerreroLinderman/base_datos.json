@@ -1,0 +1,15 @@
+{
+    "usuarios": {
+        "0000": {
+            "nombre": "Admin",
+            "apellidos": "Administrador",
+            "email": "admin@acmeclinic.com",
+            "telefono": "555 000111",
+            "direccion": "Cl 185 # 26 - 85",
+            "rol": "administrativo",
+            "contrasena": "Admin1234"
+        }
+    },
+    "pacientes": {},
+    "diagnosticos": {}
+}
