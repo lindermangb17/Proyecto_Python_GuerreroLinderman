@@ -56,7 +56,8 @@ def registrar_usuario():
         elif cedula in base_datos["usuarios"]:
             print("Usuario ya existe")
 
-        cedula = input("Ingrese otra cédula: ").strip()
+        input("Presione Enter para volver al menú ")
+        return
 
     # 2. datos personales
     nombres = input("Nombres: ").strip()
@@ -179,7 +180,8 @@ def registro_pacientes():
         elif cedula in base_datos["pacientes"]:
             print("El paciente ya está registrado")
 
-        cedula = input("Ingrese otra cédula: ").strip()
+        input("Presione Enter para volver al menú ")
+        return
 
         # 2. datos personales
 
@@ -504,7 +506,7 @@ def consultar_historia():
 
     if encontrado == False:
         print("El paciente no tiene consultas registradas")
-        input("Presione enter para volver al menu ")
+    input("Presione enter para volver al menu ")
 
 def menu(cedula_usuario,rol_usuario):
     while True:
@@ -515,7 +517,8 @@ def menu(cedula_usuario,rol_usuario):
  2. Registrar paciente
  3. Diagnosticar paciente
  4. Consultar historia clínica
- 5. Cerrar sesión\n
+ 5. Cerrar sesión
+ 6. Generar reporte carga medicos\n
  """)
         opcion=input("eleccione una opción: ")
 
@@ -539,6 +542,8 @@ def menu(cedula_usuario,rol_usuario):
             case "5":
                 print("Sesión cerrada correctamente")
                 break
+            case "6":
+                carga_medicos()
             case _:
                 print("Opcion invalida")
 
@@ -550,3 +555,51 @@ def iniciar_sistema():
         rol_usuario = base_datos["usuarios"][cedula_usuario]["rol"]
 
         menu(cedula_usuario, rol_usuario)
+
+
+def carga_medicos():
+    base_datos = cargar_base_datos()
+
+    ruta_reporte_carga_medicos = "/home/camper/Documentos/Linderman Ejercicios/Proyecto_Python_GuerreroLinderman/reporte_carga_medicos.json"
+
+
+    for cedula in base_datos["usuarios"]:
+            
+        if base_datos["usuarios"][cedula]["rol"]== "medico":
+
+            total_diagnosticos=0
+
+        for consulta in base_datos["diagnosticos"]:    
+            if base_datos["diagnosticos"][consulta]["cedula_medico"]== cedula:
+                total_diagnosticos+=1
+
+            pacientes_distintos=[]
+
+            if base_datos["diagnosticos"][consulta]["cedula_paciente"] not in pacientes_distintos:
+                pacientes_distintos.append(base_datos["diagnosticos"][consulta]["cedula_paciente"])
+
+            sintomas_totales=[]
+
+            sintomas_totales.append(base_datos["diagnosticos"][consulta]["cedula_paciente"][len("sintomas")])
+
+            sintomas_promedio=len(sintomas_totales)/total_diagnosticos
+
+            medicamentos_totales=[]
+            
+            medicamentos_totales.append(base_datos["diagnosticos"]["cedula_paciente"]["medicamentos"])
+
+            medicamentos_promedio=len(medicamentos_totales)/total_diagnosticos
+
+            reporte_carga_medicos= {
+                "id_medico": cedula,
+                "nombre_completo":base_datos["usuarios"]["nombre"] +" "+base_datos["usuarios"]["apellidos"] ,
+                "total_diagnosticos": total_diagnosticos,
+                "pacientes_distintos": len(pacientes_distintos),
+                "promedio_sintomas_por_consulta": sintomas_promedio,
+                "promedio_medicamentos_por_consulta": medicamentos_promedio
+             }
+
+    with open(ruta_reporte_carga_medicos, "w", encoding="utf-8") as reporte:
+            json.dump(reporte_carga_medicos, reporte, indent=4)
+
+    guardar_datos(reporte_carga_medicos.json )
