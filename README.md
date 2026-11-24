@@ -8,3 +8,6 @@ Funcionalidades
 - Registro de usuarios y pacientes.
 - Diagnósticos y prescripciones médicas.
 - Consulta de historias clínicas.
+
+23 de noviembre de 2026
+- Se agrego una nueva funcionalidad para generar un reporte de carga de medicos
